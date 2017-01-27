@@ -99,8 +99,6 @@ describe('Verifier', () => {
       });
 
       it('allows dot notation for password field', () => {
-        const oldPasswordField = verifier.options.passwordField;
-
         user.password = {
           value: user.password
         };
@@ -109,7 +107,6 @@ describe('Verifier', () => {
 
         return verifier._comparePassword(user, 'admin').then(result => {
           expect(result).to.deep.equal(user);
-          verifier.options.passwordField = oldPasswordField;
         });
       });
     });
