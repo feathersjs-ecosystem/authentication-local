@@ -21,7 +21,7 @@ describe('Verifier', () => {
     return hasher('admin').then(password => {
       user = {
         email: 'admin@feathersjs.com',
-        password 
+        password
       };
 
       service = {
@@ -44,6 +44,8 @@ describe('Verifier', () => {
   it('exposes the Verifier class', () => {
     expect(typeof Verifier).to.equal('function');
   });
+
+
 
   describe('constructor', () => {
     it('retains an app reference', () => {
@@ -95,18 +97,33 @@ describe('Verifier', () => {
           expect(result).to.deep.equal(user);
         });
       });
+
+      it('allows dot notation for password field', () => {
+        const oldPasswordField = verifier.options.passwordField;
+
+        user.password = {
+          value: user.password
+        };
+
+        verifier.options.passwordField = 'password.value';
+
+        return verifier._comparePassword(user, 'admin').then(result => {
+          expect(result).to.deep.equal(user);
+          verifier.options.passwordField = oldPasswordField;
+        });
+      });
     });
   });
 
   describe('_normalizeResult', () => {
     describe('when has results', () => {
-      it('returns entity when paginated', () => {  
+      it('returns entity when paginated', () => {
         return verifier._normalizeResult({ data: [user] }).then(result => {
           expect(result).to.deep.equal(user);
         });
       });
 
-      it('returns entity when not paginated', () => {  
+      it('returns entity when not paginated', () => {
         return verifier._normalizeResult([user]).then(result => {
           expect(result).to.deep.equal(user);
         });
@@ -114,13 +131,13 @@ describe('Verifier', () => {
     });
 
     describe('when no results', () => {
-      it('rejects with false when paginated', () => {  
+      it('rejects with false when paginated', () => {
         return verifier._normalizeResult({ data: [] }).catch(error => {
           expect(error).to.equal(false);
         });
       });
 
-      it('rejects with false when not paginated', () => {  
+      it('rejects with false when not paginated', () => {
         return verifier._normalizeResult([]).catch(error => {
           expect(error).to.equal(false);
         });
@@ -179,6 +196,20 @@ describe('Verifier', () => {
       verifier.verify({}, user.email, 'admin', (error, entity) => {
         expect(error).to.equal(authError);
         expect(entity).to.equal(undefined);
+        done();
+      });
+    });
+
+    it('allows dot notation for username field', done => {
+      user.email = {
+        value: user.email
+      };
+
+      verifier.options.usernameField = 'email.value';
+
+      verifier.verify({}, user.email.value, 'admin', (error, entity) => {
+        expect(error).to.equal(null);
+        expect(entity).to.deep.equal(user);
         done();
       });
     });
