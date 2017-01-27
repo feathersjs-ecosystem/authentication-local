@@ -1,7 +1,6 @@
 import Debug from 'debug';
 import errors from 'feathers-errors';
 import bcrypt from 'bcryptjs';
-import set from 'lodash.set';
 import get from 'lodash.get';
 
 const debug = Debug('feathers-authentication-local:verify');
@@ -66,11 +65,9 @@ class LocalVerifier {
   verify(req, username, password, done) {
     debug('Checking credentials', username, password);
     const query = {
+      [this.options.usernameField]: username,
       $limit: 1
     };
-
-    // set usernameField in query, accepting dot notation
-    set(query, this.options.usernameField, username);
 
     // Look up the entity
     this.service.find({ query })

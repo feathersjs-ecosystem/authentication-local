@@ -196,19 +196,5 @@ describe('Verifier', () => {
         done();
       });
     });
-
-    it('allows dot notation for username field', done => {
-      user.email = {
-        value: user.email
-      };
-
-      verifier.options.usernameField = 'email.value';
-
-      verifier.verify({}, user.email.value, 'admin', (error, entity) => {
-        expect(error).to.equal(null);
-        expect(entity).to.deep.equal(user);
-        done();
-      });
-    });
   });
 });
