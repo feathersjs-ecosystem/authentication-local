@@ -67,8 +67,12 @@ class LocalVerifier {
 
   verify(req, username, password, done) {
     debug('Checking credentials', username, password);
+
+    // Choose username field
+    const usernameField = this.options.entityUsernameField || this.options.usernameField;
+
     const query = {
-      [this.options.usernameField]: username,
+      [usernameField]: username,
       $limit: 1
     };
 
