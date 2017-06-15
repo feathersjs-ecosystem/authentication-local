@@ -161,6 +161,13 @@ describe('Verifier', () => {
       });
     });
 
+    it('produces an error message when the user did not exist', done => {
+      verifier.verify({}, 'nonexistinguser@gmail.com', 'admin', (err, user, info) => {
+        expect(info.message).to.equal('Invalid login');
+        done();
+      });
+    });
+
     it('calls _comparePassword', done => {
       sinon.spy(verifier, '_comparePassword');
       verifier.verify({}, user.email, 'admin', () => {
