@@ -71,7 +71,13 @@ class LocalVerifier {
 
     // Look up the entity
     this.service.find({ query })
-      .then(this._normalizeResult)
+      .then(response => {
+        const results = response.data || response
+        if (!results.length) {
+          debug(`a record with ${this.options.usernameField} of '${username}' did not exist`);
+        }
+        return this._normalizeResult(response)
+      })
       .then(entity => this._comparePassword(entity, password))
       .then(entity => {
         const id = entity[this.service.id];
