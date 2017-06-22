@@ -25,8 +25,18 @@ describe('Verifier', () => {
       };
 
       service = {
-        find: sinon.stub().returns(Promise.resolve([user]))
+        find () {}
       };
+
+      sinon.stub(service, "find", function (params) {
+        return new Promise((resolve, reject) => {
+          const { email } = params && params.query
+          if (email === 'nonexistinguser@gmail.com') {
+            return resolve([])
+          }
+          return resolve([user])
+        })
+      });
 
       app.use('users', service)
         .configure(authentication({ secret: 'supersecret' }));
@@ -185,7 +195,7 @@ describe('Verifier', () => {
       });
     });
 
-    it('handles false rejections in promise chain', () => {
+    it('handles false rejections in promise chain', (done) => {
       verifier._normalizeResult = () => Promise.reject(false);
       verifier.verify({}, user.email, 'admin', (error, entity) => {
         expect(error).to.equal(null);
@@ -194,7 +204,7 @@ describe('Verifier', () => {
       });
     });
 
-    it('returns errors', () => {
+    it('returns errors', (done) => {
       const authError = new Error('An error');
       verifier._normalizeResult = () => Promise.reject(authError);
       verifier.verify({}, user.email, 'admin', (error, entity) => {
