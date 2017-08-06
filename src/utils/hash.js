@@ -2,7 +2,14 @@ import bcrypt from 'bcryptjs';
 
 export default function hasher (password) {
   return new Promise((resolve, reject) => {
-    bcrypt.genSalt(10, function (error, salt) {
+    const BCRYPT_WORK_FACTOR_BASE = 12;
+    const BCRYPT_DATE_BASE = 1483228800000;
+    const BCRYPT_WORK_INCREASE_INTERVAL = 47300000000;
+    let BCRYPT_CURRENT_DATE = new Date().getTime();
+    let BCRYPT_WORK_INCREASE = Math.floor((BCRYPT_CURRENT_DATE - BCRYPT_DATE_BASE) / BCRYPT_WORK_INCREASE_INTERVAL);
+    let BCRYPT_WORK_FACTOR = Math.min(19, BCRYPT_WORK_FACTOR_BASE + BCRYPT_WORK_INCREASE);
+
+    bcrypt.genSalt(BCRYPT_WORK_FACTOR, function (error, salt) {
       if (error) {
         return reject(error);
       }
