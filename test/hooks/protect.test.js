@@ -24,6 +24,25 @@ function testOmit (title, property) {
       });
     });
 
+    it('omits regex fields from object', () => {
+      const data = {
+        email: 'test@user.com',
+        password: 'supersecret'
+      };
+      const context = {
+        [property]: data
+      };
+
+      const fnRegex = protect(/^pass[word]+/);
+
+      const result = fnRegex(context);
+
+      expect(result).to.deep.equal({
+        [property]: data,
+        dispatch: { email: 'test@user.com' }
+      });
+    });
+
     it('omits from nested object', () => {
       const hook = protect('user.password');
       const data = {
