@@ -1,6 +1,6 @@
 # @feathersjs/authentication-local
 
-> __Important:__ The code for this module has been moved into the main Feathers repository at [feathersjs/feathers](https://github.com/feathersjs/feathers) ([package direct link](https://github.com/feathersjs/feathers/tree/master/packages/authentication-local)). Please open issues and pull requests there. No changes are required in your existing Feathers applications.
+> __Important:__ The code for this module has been moved into the main Feathers repository at [feathersjs/feathers](https://github.com/feathersjs/feathers) ([package direct link](https://github.com/feathersjs/feathers/tree/master/packages/authentication-local)). Please open issues and pull requests there. No changes in your existing Feathers applications are necessary.
 
 [![Build Status](https://travis-ci.org/feathersjs/authentication-local.png?branch=master)](https://travis-ci.org/feathersjs/authentication-local)
 
